@@ -1,8 +1,13 @@
-// Create shipment
+// CREATE SHIPMENT
 async function createShipment() {
   try {
     let shipment = {
       trackingId: Math.random().toString(36).substring(7),
+      sender: document.getElementById("sender").value,
+      receiver: document.getElementById("receiver").value,
+      pickup: document.getElementById("pickup").value,
+      destination: document.getElementById("destination").value,
+      weight: document.getElementById("weight").value,
       status: "Processing"
     };
 
@@ -23,7 +28,7 @@ async function createShipment() {
 }
 
 
-// Track shipment
+// TRACK SHIPMENT
 async function trackPackage() {
   try {
     let id = document.getElementById("trackingId").value;
