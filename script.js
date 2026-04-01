@@ -1,3 +1,6 @@
+// Wake server automatically
+fetch("https://buka-courier.onrender.com");
+
 // CREATE SHIPMENT
 async function createShipment() {
   try {
