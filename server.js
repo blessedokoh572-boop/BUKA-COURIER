@@ -10,7 +10,7 @@ app.post("/ship", (req, res) => {
   res.send({ message: "Shipment saved" });
 });
 
-app.get("/track/:id", (req, res) => {
+app.getfetch('https://buka-courier.onrender.com/api/track') => {
   let shipment = shipments.find(s => s.trackingId === req.params.id);
   res.json(shipment || null);
 });
