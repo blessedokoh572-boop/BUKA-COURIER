@@ -84,12 +84,20 @@
 
   <div class="result" id="result"></div>
 
-  <div class="track-box">
-    <h2> Track Shipment</h2>
-    <input type="text" id="trackID" placeholder="Enter Tracking ID">
-    <button onclick="track()">Track</button>
-    <div class="result" id="trackResult"></div>
+	<div class="track-box">
+  <h2>🔍 Track Shipment</h2>
+  <input type="text" id="trackID" placeholder="Enter Tracking ID">
+  <button onclick="track()">Track</button>
+
+  <div id="trackResult"></div>
+
+  <div id="timeline" style="margin-top:20px; display:none;">
+    <div class="step" id="step1"> Shipment Created</div>
+    <div class="step" id="step2"> In Transit</div>
+    <div class="step" id="step3"> Out for Delivery</div>
+    <div class="step" id="step4"> Delivered</div>
   </div>
+</div>
 
 </div>
 
