@@ -1,40 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Buka Courier</title>
+</head>
+<body>
+
+<h2> Book Shipment</h2>
+
+<form id="shipmentForm">
+  <input type="text" id="sender" placeholder="Sender Name" required><br><br>
+  <input type="text" id="receiver" placeholder="Receiver Name" required><br><br>
+  <input type="text" id="address" placeholder="Delivery Address" required><br><br>
+  <input type="number" id="weight" placeholder="Weight (kg)" required><br><br>
+  <button type="submit">Book Shipment</button>
+</form>
+
+<div id="result"></div>
+
 <script>
-document.getElementById("shipmentForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("shipmentForm");
   const result = document.getElementById("result");
-  result.innerHTML = " Processing...";
 
-  const sender = document.getElementById("sender").value;
-  const receiver = document.getElementById("receiver").value;
-  const address = document.getElementById("address").value;
-  const weight = document.getElementById("weight").value;
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-  try {
-    const res = await fetch("https://buka-courier.onrender.com/api/shipments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ sender, receiver, address, weight })
-    });
+    result.innerHTML = " Processing...";
 
-    const text = await res.text();
+    const sender = document.getElementById("sender").value;
+    const receiver = document.getElementById("receiver").value;
+    const address = document.getElementById("address").value;
+    const weight = document.getElementById("weight").value;
 
-    // Try parsing JSON safely
-    let data;
     try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error("Invalid server response");
-    }
+      const res = await fetch("https://buka-courier.onrender.com/api/shipments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ sender, receiver, address, weight })
+      });
 
-    result.innerHTML = `
-       Shipment Created <br><br>
-       Tracking ID: <strong>${data.trackingID}</strong>
-    `;
-  } catch (err) {
-    result.innerHTML = " Server is waking up or blocked. Try again in 10 seconds.";
-  }
+      if (!res.ok) {
+        throw new Error("Server error");
+      }
+
+      const data = await res.json();
+
+      result.innerHTML = `
+         Shipment Created <br><br>
+         Tracking ID: <strong>${data.trackingID}</strong>
+      `;
+    } catch (err) {
+      result.innerHTML = " Server waking up... try again in a few seconds";
+    }
+  });
 });
 </script>
+
+</body>
+</html>
