@@ -2,60 +2,155 @@
 <html>
 <head>
   <title>Buka Courier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    header {
+      background: #ffcc00;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .result {
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .track-box {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+  </style>
 </head>
 <body>
 
-<h2> Book Shipment</h2>
+<header> Buka Courier</header>
 
-<form id="shipmentForm">
-  <input type="text" id="sender" placeholder="Sender Name" required><br><br>
-  <input type="text" id="receiver" placeholder="Receiver Name" required><br><br>
-  <input type="text" id="address" placeholder="Delivery Address" required><br><br>
-  <input type="number" id="weight" placeholder="Weight (kg)" required><br><br>
-  <button type="submit">Book Shipment</button>
-</form>
+<div class="container">
 
-<div id="result"></div>
+  <h2>📦 Book Shipment</h2>
+
+  <form id="shipmentForm">
+    <input type="text" id="sender" placeholder="Sender Name" required>
+    <input type="text" id="receiver" placeholder="Receiver Name" required>
+    <input type="text" id="address" placeholder="Delivery Address" required>
+    <input type="number" id="weight" placeholder="Weight (kg)" required>
+    <button type="submit">Book Shipment</button>
+  </form>
+
+  <div class="result" id="result"></div>
+
+  <div class="track-box">
+    <h2> Track Shipment</h2>
+    <input type="text" id="trackID" placeholder="Enter Tracking ID">
+    <button onclick="track()">Track</button>
+    <div class="result" id="trackResult"></div>
+  </div>
+
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("shipmentForm");
+document.getElementById("shipmentForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
   const result = document.getElementById("result");
+  result.innerHTML = " Connecting...";
 
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
+  const sender = document.getElementById("sender").value;
+  const receiver = document.getElementById("receiver").value;
+  const address = document.getElementById("address").value;
+  const weight = document.getElementById("weight").value;
 
-    result.innerHTML = " Processing...";
+  try {
+    const res = await fetch("https://buka-courier.onrender.com/api/shipments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ sender, receiver, address, weight })
+    });
 
-    const sender = document.getElementById("sender").value;
-    const receiver = document.getElementById("receiver").value;
-    const address = document.getElementById("address").value;
-    const weight = document.getElementById("weight").value;
+    const data = await res.json();
 
-    try {
-      const res = await fetch("https://buka-courier.onrender.com/api/shipments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ sender, receiver, address, weight })
-      });
-
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-
-      const data = await res.json();
-
-      result.innerHTML = `
-         Shipment Created <br><br>
-         Tracking ID: <strong>${data.trackingID}</strong>
-      `;
-    } catch (err) {
-      result.innerHTML = " Server waking up... try again in a few seconds";
-    }
-  });
+    result.innerHTML = `
+       Shipment Created <br><br>
+       Tracking ID: <strong>${data.trackingID}</strong>
+    `;
+  } catch (err) {
+    result.innerHTML = " Server waking up... try again in a few seconds";
+  }
 });
+
+async function track() {
+  const id = document.getElementById("trackID").value;
+  const result = document.getElementById("trackResult");
+
+  result.innerHTML = " Checking...";
+
+  try {
+    const res = await fetch(`https://buka-courier.onrender.com/api/track/${id}`);
+
+    if (res.status === 404) {
+      result.innerHTML = " Not found";
+      return;
+    }
+
+    const data = await res.json();
+
+    result.innerHTML = `
+       Sender: ${data.sender} <br>
+       Receiver: ${data.receiver} <br>
+       Address: ${data.address} <br>
+       Status: ${data.status}
+    `;
+  } catch {
+    result.innerHTML = " Try again...";
+  }
+}
 </script>
 
 </body>
