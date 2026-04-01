@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Track Package</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Track Shipment</title>
 </head>
 <body>
 
-<h2>Track Your Package</h2>
+<h2> Track Your Shipment</h2>
 
-<input type="text" id="trackingId" placeholder="Enter Tracking ID">
-<button type="button" onclick="trackPackage()">Track</button>
+<input type="text" id="trackID" placeholder="Enter Tracking ID"><br><br>
+<button onclick="track()">Track</button>
 
-<p id="result"></p>
+<div id="result"></div>
 
-<script src="script.js"></script>
+<script>
+async function track() {
+  const id = document.getElementById("trackID").value;
+
+  try {
+    const res = await fetch(`https://buka-courier.onrender.com/api/track/${id}`);
+
+    if (res.status === 404) {
+      document.getElementById("result").innerHTML = " Shipment not found";
+      return;
+    }
+
+    const data = await res.json();
+
+    document.getElementById("result").innerHTML = `
+       Sender: ${data.sender} <br>
+       Receiver: ${data.receiver} <br>
+       Address: ${data.address} <br>
+       Status: ${data.status}
+    `;
+  } catch (err) {
+    document.getElementById("result").innerHTML = " Error connecting to server";
+  }
+}
+</script>
+
 </body>
 </html>
