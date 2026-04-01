@@ -1,25 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Buka Courier</title>
-</head>
-<body>
-
-<h2> Book Shipment</h2>
-
-<form id="shipmentForm">
-  <input type="text" id="sender" placeholder="Sender Name" required><br><br>
-  <input type="text" id="receiver" placeholder="Receiver Name" required><br><br>
-  <input type="text" id="address" placeholder="Delivery Address" required><br><br>
-  <input type="number" id="weight" placeholder="Weight (kg)" required><br><br>
-  <button type="submit">Book Shipment</button>
-</form>
-
-<div id="result"></div>
-
 <script>
 document.getElementById("shipmentForm").addEventListener("submit", async function(e) {
   e.preventDefault();
+
+  const result = document.getElementById("result");
+  result.innerHTML = " Processing...";
 
   const sender = document.getElementById("sender").value;
   const receiver = document.getElementById("receiver").value;
@@ -35,17 +19,22 @@ document.getElementById("shipmentForm").addEventListener("submit", async functio
       body: JSON.stringify({ sender, receiver, address, weight })
     });
 
-    const data = await res.json();
+    const text = await res.text();
 
-    document.getElementById("result").innerHTML = `
+    // Try parsing JSON safely
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("Invalid server response");
+    }
+
+    result.innerHTML = `
        Shipment Created <br><br>
        Tracking ID: <strong>${data.trackingID}</strong>
     `;
   } catch (err) {
-    document.getElementById("result").innerHTML = " Error connecting to server";
+    result.innerHTML = " Server is waking up or blocked. Try again in 10 seconds.";
   }
 });
 </script>
-
-</body>
-</html>
