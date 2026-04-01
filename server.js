@@ -16,3 +16,6 @@ app.get("/track/:id", (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
+
+const cors = require("cors");
+app.use(cors());
