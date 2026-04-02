@@ -1,165 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Buka Courier</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
+  <title>BukaCourier</title>
 
-    header {
-      background: #ffcc00;
-      padding: 15px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 20px;
-    }
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    .container {
-      max-width: 400px;
-      margin: 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: black;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #333;
-    }
-
-    .result {
-      margin-top: 15px;
-      text-align: center;
-    }
-
-    .track-box {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header> Buka Courier</header>
+<!-- NAVBAR -->
+<nav>
+  <h2>BukaCourier</h2>
+  <button onclick="scrollToTrack()">Track</button>
+</nav>
 
-<div class="container">
+<!-- HERO -->
+<section class="hero">
+  <h1>Fast & Reliable Delivery</h1>
+  <p>Ship packages anywhere with speed and confidence</p>
+  <button onclick="scrollToTrack()">Track Shipment</button>
+</section>
 
-  <h2>📦 Book Shipment</h2>
+<!-- BOOK SHIPMENT -->
+<section class="card">
+  <h2>Book Shipment</h2>
 
-  <form id="shipmentForm">
-    <input type="text" id="sender" placeholder="Sender Name" required>
-    <input type="text" id="receiver" placeholder="Receiver Name" required>
-    <input type="text" id="address" placeholder="Delivery Address" required>
-    <input type="number" id="weight" placeholder="Weight (kg)" required>
-    <button type="submit">Book Shipment</button>
-  </form>
+  <input id="sender" placeholder="Sender Name">
+  <input id="receiver" placeholder="Receiver Name">
+  <input id="pickup" placeholder="Pickup Location">
+  <input id="destination" placeholder="Destination">
+  <input id="weight" placeholder="Weight">
 
-  <div class="result" id="result"></div>
+  <button onclick="createShipment()">Submit</button>
+</section>
 
-	<div class="track-box">
-  <h2>🔍 Track Shipment</h2>
-  <input type="text" id="trackID" placeholder="Enter Tracking ID">
-  <button onclick="track()">Track</button>
+<!-- TRACK -->
+<section class="card" id="track">
+  <h2>Track Shipment</h2>
 
-  <div id="trackResult"></div>
+  <input id="trackId" placeholder="Enter Tracking ID">
+  <button onclick="trackShipment()">Track</button>
 
-  <div id="timeline" style="margin-top:20px; display:none;">
-    <div class="step" id="step1"> Shipment Created</div>
-    <div class="step" id="step2"> In Transit</div>
-    <div class="step" id="step3"> Out for Delivery</div>
-    <div class="step" id="step4"> Delivered</div>
-  </div>
-</div>
+  <div id="result"></div>
+</section>
 
-</div>
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 BukaCourier. All rights reserved.</p>
+</footer>
 
-<script>
-document.getElementById("shipmentForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const result = document.getElementById("result");
-  result.innerHTML = " Connecting...";
-
-  const sender = document.getElementById("sender").value;
-  const receiver = document.getElementById("receiver").value;
-  const address = document.getElementById("address").value;
-  const weight = document.getElementById("weight").value;
-
-  try {
-    const res = await fetch("https://buka-courier.onrender.com/api/shipments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ sender, receiver, address, weight })
-    });
-
-    const data = await res.json();
-
-    result.innerHTML = `
-       Shipment Created <br><br>
-       Tracking ID: <strong>${data.trackingID}</strong>
-    `;
-  } catch (err) {
-    result.innerHTML = " Server waking up... try again in a few seconds";
-  }
-});
-
-async function track() {
-  const id = document.getElementById("trackID").value;
-  const result = document.getElementById("trackResult");
-
-  result.innerHTML = " Checking...";
-
-  try {
-    const res = await fetch(`https://buka-courier.onrender.com/api/track/${id}`);
-
-    if (res.status === 404) {
-      result.innerHTML = " Not found";
-      return;
-    }
-
-    const data = await res.json();
-
-    result.innerHTML = `
-       Sender: ${data.sender} <br>
-       Receiver: ${data.receiver} <br>
-       Address: ${data.address} <br>
-       Status: ${data.status}
-    `;
-  } catch {
-    result.innerHTML = " Try again...";
-  }
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
