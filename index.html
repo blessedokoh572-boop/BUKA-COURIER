@@ -1,57 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BukaCourier</title>
-
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Global Express Tracking</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav>
-  <h2>BukaCourier</h2>
-  <button onclick="scrollToTrack()">Track</button>
-</nav>
+<header>
+  <h1>Global Express</h1>
+</header>
 
-<!-- HERO -->
 <section class="hero">
-  <h1>Fast & Reliable Delivery</h1>
-  <p>Ship packages anywhere with speed and confidence</p>
-  <button onclick="scrollToTrack()">Track Shipment</button>
+  <h2>Track Your Shipment</h2>
+  <input type="text" id="trackingInput" placeholder="Enter Tracking Number" />
+  <button onclick="trackPackage()">Track</button>
 </section>
 
-<!-- BOOK SHIPMENT -->
-<section class="card">
-  <h2>Book Shipment</h2>
-
-  <input id="sender" placeholder="Sender Name">
-  <input id="receiver" placeholder="Receiver Name">
-  <input id="pickup" placeholder="Pickup Location">
-  <input id="destination" placeholder="Destination">
-  <input id="weight" placeholder="Weight">
-
-  <button onclick="createShipment()">Submit</button>
-</section>
-
-<!-- TRACK -->
-<section class="card" id="track">
-  <h2>Track Shipment</h2>
-
-  <input id="trackId" placeholder="Enter Tracking ID">
-  <button onclick="trackShipment()">Track</button>
-
-  <div id="result"></div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 BukaCourier. All rights reserved.</p>
-</footer>
+<section id="result"></section>
 
 <script src="script.js"></script>
 </body>
